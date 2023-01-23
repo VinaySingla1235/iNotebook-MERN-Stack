@@ -17,8 +17,10 @@ router.post(
   async (req, res) => {
     // if there are errors return bad request and errors
     const errors = validationResult(req);
+    let success=false;
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      success=false;
+      return res.status(400).json({ success,errors: errors.array() });
     }
     try {
       // check whether user exists with this email or not
@@ -45,7 +47,8 @@ router.post(
       };
       const authtoken = jwt.sign(data, JWT_SECRET);
       // console.log(authtoken);
-      res.json({ authtoken });
+      success=true
+      res.json({success, authtoken });
     } catch (error) {
       console.log(error.message);
       res.status(500).send("Internal server error");
@@ -63,8 +66,10 @@ router.post(
   async (req, res) => {
     //If there are errors return bad request and errors
     const errors = validationResult(req);
+    let success=false;
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      success=false;
+      return res.status(400).json({success, errors: errors.array() });
     }
     const { email, password } = req.body;
     try {
@@ -73,7 +78,7 @@ router.post(
       if (!user) {
         return res
           .status(400)
-          .json({ error: "Please login with correct credentials" });
+          .json({ success,error: "Please login with correct credentials" });
       }
       const passwordCompare = await bcrypt.compare(password, user.password);
       if (!passwordCompare) {
@@ -88,7 +93,8 @@ router.post(
       };
       const authtoken = jwt.sign(data, JWT_SECRET);
       // console.log(authtoken);
-      res.json({ authtoken });
+      success=true;
+      res.json({ success,authtoken });
     } catch (error) {
       console.log(error.message);
       res.status(500).send("Internal server error");
