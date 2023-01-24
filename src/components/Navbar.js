@@ -1,14 +1,21 @@
 import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-
-const Navbar = () => {
+import { useNavigate } from "react-router-dom";
+const Navbar = (props) => {
   let location = useLocation();
   useEffect(() => {
     // Google Analytics
     // console.log(location.pathname);
   }, [location]);
+  let navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("iNotebook-token");
+    console.log("Logout is clicked");
+    props.showAlert("Logged out successfully", "success");
+    navigate("/login");
+  };
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           iNotebook
@@ -48,15 +55,20 @@ const Navbar = () => {
               </Link>
             </li>
           </ul>
-          <form className="d-flex" role="search">
-            
-            <Link to="/login" className="btn btn-primary mx-2" type="submit">
-              Login
-            </Link>
-            <Link to="/signup" className="btn btn-primary mx-2" type="submit">
-              Signup
-            </Link>
-          </form>
+          {!localStorage.getItem("iNotebook-token") ? (
+            <form className="d-flex" role="search">
+              <Link to="/login" className="btn btn-primary mx-2" type="submit">
+                Login
+              </Link>
+              <Link to="/signup" className="btn btn-primary mx-2" type="submit">
+                Signup
+              </Link>
+            </form>
+          ) : (
+            <button onClick={handleLogout} className="btn btn-primary">
+              Logout
+            </button>
+          )}
         </div>
       </div>
     </nav>

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useSyncExternalStore } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import noteContext from "../context/notes/NoteContext";
 const EditNote = (props) => {
   const context = useContext(noteContext);
@@ -33,6 +33,7 @@ const EditNote = (props) => {
     e.preventDefault();
     editNote(note._eid, note.etitle, note.edescription, note.etag);
     document.getElementById("close-button").click();
+    props.showAlert("Updated successfully","success");
   };
   const onChange = (e) => {
     // console.log("onChange clicked")
